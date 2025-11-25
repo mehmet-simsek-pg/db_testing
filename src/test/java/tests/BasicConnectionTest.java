@@ -14,11 +14,12 @@ public class BasicConnectionTest {
         Connection connection = DriverManager.getConnection(url, user, password);
 
         String sql = "SELECT * FROM students"; // sorguyu yazdik
-        Statement statement = connection.createStatement(); // durum olusturduk
+        // Java nin JDBC üzerinden database'e sorgu gönderilmesini saglayan classtir
+        Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql); // sorguyu calistirdik
 
         while (resultSet.next()) { // tabloda kac veri oldugunu bilmedigim icin
-            // while döngüsü kullaniyoruz
+            // while döngüsü kullaniyoruz.
             // Database deki tablodan gelen verileri ekrana yazdirdik
             System.out.println(
                     resultSet.getInt("student_id") + " - " +
