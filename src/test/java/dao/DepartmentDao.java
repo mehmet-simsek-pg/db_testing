@@ -15,6 +15,7 @@ public class DepartmentDao {
     private final Connection connection;
 
     private static final String INSERT_DEPARTMENT = "sql/departments/insert.sql";
+    private static final String SELECT_DEPARTMENT = "sql/departments/select.sql";
 
     public DepartmentDao(Connection connection) {
         this.connection = connection;
@@ -40,5 +41,28 @@ public class DepartmentDao {
         }
     }
 
+    public Department findById(int departmentId) {
+
+        String sql = SqlLoader.loadSql(SELECT_DEPARTMENT);
+        Department department = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, departmentId);
+
+            ResultSet rs = ps.executeQuery();
+
+            // department_id yazmamizin sebebi tablodaki sütunda öyle yazdigi icin
+            if (rs.next()){
+                department = new Department(
+                        rs.getInt("department_id"),
+                        rs.getString("department_name"));
+                
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return department;
+    }
 
 }
