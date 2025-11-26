@@ -31,4 +31,29 @@ public class DepartmentTests extends BaseTest{
         Assert.assertEquals(fromDB.getName(), department.getName(), "Yanlis isim ile kayit yapildi");
     }
 
+    @Test
+    public void updateDepartmentName() {
+        Department department = new Department("JDBC structure");
+
+        int id = departmentDao.insertDepartment(department);
+        Assert.assertTrue(id > 0);
+
+        String newName = "Mobile Testing";
+
+        int row = departmentDao.updateDepartmentName(id, newName);
+
+        Assert.assertEquals(row, 1, "Department ismi degismedi");
+    }
+
+    @Test
+    public void deleteDepartment() {
+
+        Department department = new Department("CI/CD Pipeline");
+
+        int id = departmentDao.insertDepartment(department);
+        Assert.assertTrue(id > 0);
+
+        int row = departmentDao.deleteDepartment(id);
+        Assert.assertEquals(row, 1, "Department silinmedi");
+    }
 }

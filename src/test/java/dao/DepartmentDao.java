@@ -16,6 +16,8 @@ public class DepartmentDao {
 
     private static final String INSERT_DEPARTMENT = "sql/departments/insert.sql";
     private static final String SELECT_DEPARTMENT = "sql/departments/select.sql";
+    private static final String UPDATE_DEPARTMENT = "sql/departments/update.sql";
+    private static final String DELETE_DEPARTMENT = "sql/departments/delete.sql";
 
     public DepartmentDao(Connection connection) {
         this.connection = connection;
@@ -52,11 +54,11 @@ public class DepartmentDao {
             ResultSet rs = ps.executeQuery();
 
             // department_id yazmamizin sebebi tablodaki sütunda öyle yazdigi icin
-            if (rs.next()){
+            if (rs.next()) {
                 department = new Department(
                         rs.getInt("department_id"),
                         rs.getString("department_name"));
-                
+
             }
 
         } catch (SQLException e) {
@@ -65,4 +67,35 @@ public class DepartmentDao {
         return department;
     }
 
+    public int updateDepartmentName(int departmentId, String newName) {
+
+        String sql = SqlLoader.loadSql(UPDATE_DEPARTMENT);
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1, newName);
+            ps.setInt(2, departmentId);
+
+            return ps.executeUpdate(); // return olarak executeUpdate int dönüyor
+            // O yüzden ResultSet kullanmadik cünkü tablo olusmuyor bu islem sonucunda
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int deleteDepartment(int departmentId) {
+
+        String sql = SqlLoader.loadSql(DELETE_DEPARTMENT);
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, departmentId);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
