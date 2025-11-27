@@ -1,6 +1,7 @@
 package dao;
 
 import model.Teacher;
+import model.TeacherWithDepartment;
 import util.SqlLoader;
 
 import java.sql.Connection;
@@ -16,6 +17,7 @@ public class TeacherDao {
     private static final String SELECT_TEACHER = "sql/teachers/select.sql";
     private static final String UPDATE_TEACHER = "sql/teachers/update.sql";
     private static final String DELETE_TEACHER = "sql/teachers/delete.sql";
+    private static final String TEACHER_WITH_DEPARTMENT = "sql/teachers/teacher_with_department_name.sql";
 
 
     public TeacherDao(Connection connection) {
@@ -96,5 +98,29 @@ public class TeacherDao {
 
            return ps.executeUpdate();
         }
+    }
+
+    public TeacherWithDepartment findByIdWithDepartment(int teacherId) throws SQLException {
+
+        String sql = SqlLoader.loadSql(TEACHER_WITH_DEPARTMENT);
+        TeacherWithDepartment tc = null;
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+
+            ps.setInt(1, teacherId);
+
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()) {
+                    tc = new TeacherWithDepartment(
+                            rs.getInt("teacher_id"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("email"),
+                            rs.getInt("department_id"),
+                            rs.getString("department_name")
+                    );
+                }
+            }
+        }
+        return tc;
     }
 }
