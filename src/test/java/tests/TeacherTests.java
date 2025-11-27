@@ -1,0 +1,75 @@
+package tests;
+
+import dao.DepartmentDao;
+import dao.TeacherDao;
+import model.Department;
+import model.Teacher;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.sql.SQLException;
+import java.util.UUID;
+
+public class TeacherTests extends BaseTest {
+
+    private TeacherDao teacherDao;
+    private DepartmentDao departmentDao;
+
+    @BeforeMethod
+    public void setUpDao() {
+        departmentDao = new DepartmentDao(connection);
+        teacherDao = new TeacherDao(connection);
+    }
+
+    @Test
+    public void insertAndSelectTeacher() throws SQLException {
+
+        Department department = new Department("JDBC Dersleri");
+
+        int departmentId = departmentDao.insertDepartment(department);
+
+        Teacher teacher = new Teacher(
+                "Mehmet",
+                "Simsek",
+                "mehmet." + UUID.randomUUID() + "@example.com",
+                departmentId);
+
+        int teacherId = teacherDao.insertTeacher(teacher);
+        Assert.assertTrue(teacherId > 0);
+
+        Teacher fromDb = teacherDao.findById(teacherId);
+
+        Assert.assertEquals(fromDb.getFirstname(), teacher.getFirstname(), "Firstname yanlis girilmis");
+        Assert.assertEquals(fromDb.getLastname(), teacher.getLastname(), "Lastname yanlis girilmis");
+    }
+
+    @Test
+    public void updateTeacherEmail() throws SQLException {
+        Department department = new Department("SQL abfragen");
+
+        int departmentId = departmentDao.insertDepartment(department);
+
+        String oldEmail = "m." + UUID.randomUUID() + "@example.com";
+
+        Teacher teacher = new Teacher(
+                "Mehmet",
+                "Simsek",
+                oldEmail,
+                departmentId
+        );
+
+        int teacherId = teacherDao.insertTeacher(teacher);
+
+        String newEmail = "mehmet@example.com";
+
+        int row = teacherDao.updateTeacherEmail(teacherId, newEmail);
+        Assert.assertEquals(row, 1, "Email güncellenemedi");
+
+        Teacher fromDb = teacherDao.findById(teacherId);
+
+        Assert.assertEquals(fromDb.getEmail(), newEmail, "Email yanlis güncellendi");
+    }
+
+
+}
