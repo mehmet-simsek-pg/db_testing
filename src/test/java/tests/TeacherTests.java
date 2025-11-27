@@ -71,5 +71,25 @@ public class TeacherTests extends BaseTest {
         Assert.assertEquals(fromDb.getEmail(), newEmail, "Email yanlis güncellendi");
     }
 
+    @Test
+    public void deleteTeacher() throws SQLException {
+
+        Department department = new Department("JDBC tables");
+
+        int departmentId = departmentDao.insertDepartment(department);
+
+        Teacher teacher = new Teacher(
+                "mehmet",
+                "simsek",
+                "mehmetsimsek@example.com",
+                departmentId
+        );
+
+        int teacherId = teacherDao.insertTeacher(teacher);
+        Assert.assertTrue( teacherId > 0);
+
+        int row = teacherDao.deleteTeacher(teacherId);
+        Assert.assertEquals(row, 1, "Teacher silinemedi");
+    }
 
 }
