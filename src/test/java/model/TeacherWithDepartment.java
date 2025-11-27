@@ -24,6 +24,13 @@ public class TeacherWithDepartment {
         this.departmentName = departmentName;
     }
 
+    // Sql icerisindeki select te 3 sütun istedigimiz icin bu constructori olusturduk
+    public TeacherWithDepartment(String firstname, String lastname, String departmentName) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.departmentName = departmentName;
+    }
+
     public int getTeacherId() {
         return teacherId;
     }

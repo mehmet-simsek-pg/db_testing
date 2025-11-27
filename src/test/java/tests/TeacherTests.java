@@ -4,6 +4,7 @@ import dao.DepartmentDao;
 import dao.TeacherDao;
 import model.Department;
 import model.Teacher;
+import model.TeacherWithDepartment;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -90,6 +91,29 @@ public class TeacherTests extends BaseTest {
 
         int row = teacherDao.deleteTeacher(teacherId);
         Assert.assertEquals(row, 1, "Teacher silinemedi");
+    }
+
+    @Test
+    public void findByIdWithDepartment() throws SQLException {
+
+        Department department = new Department("Batch 8 ucuyor");
+
+        int departmentId = departmentDao.insertDepartment(department);
+
+        Teacher teacher = new Teacher(
+                "Mehmet",
+                "Simsek",
+                "m.s" + UUID.randomUUID() +"@example.com",
+                departmentId
+        );
+
+        int teacherId = teacherDao.insertTeacher(teacher);
+
+        TeacherWithDepartment tc = teacherDao.findByIdWithDepartment(teacherId);
+
+        Assert.assertEquals(tc.getFirstname(), teacher.getFirstname());
+        Assert.assertEquals(tc.getLastname(), teacher.getLastname());
+        Assert.assertEquals(tc.getDepartmentName(), department.getName());
     }
 
 }

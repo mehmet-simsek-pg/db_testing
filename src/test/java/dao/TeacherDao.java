@@ -110,12 +110,15 @@ public class TeacherDao {
 
             try (ResultSet rs = ps.executeQuery()){
                 if (rs.next()) {
+                    // sql selecti icerisinde 3 bilgi istedigim icin o sütunlarin bilgilerini
+                    // resultSet icerisinden aldik
+                    // Yoruma alinan yerlere gerek olmadigi icin yoruma aldik
                     tc = new TeacherWithDepartment(
-                            rs.getInt("teacher_id"),
+                            //rs.getInt("teacher_id"),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
-                            rs.getString("email"),
-                            rs.getInt("department_id"),
+                            //rs.getString("email"),
+                            //rs.getInt("department_id"),
                             rs.getString("department_name")
                     );
                 }
